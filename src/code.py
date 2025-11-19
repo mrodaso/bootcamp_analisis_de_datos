@@ -94,6 +94,7 @@ df_actual = (
 )
 
 
+
 # Calcular el área de cobertura máxima entre los operadores para cada fila
 df_actual["AREA_COB_MAX"] = df_actual[["AREA_COB_CLARO", "AREA_COB_MOVISTAR", "AREA_COB_TIGO", "AREA_COB_WOM"]].max(axis=1)
 
@@ -110,12 +111,13 @@ df_max_tecnologia = (
     df_actual.loc[df_actual.groupby(['ANNO','TRIMESTRE','DEPARTAMENTO','MUNICIPIO','CPOB'])['AREA_COB_MAX'].idxmax()]
     .copy()
 )
-
 # Renombrar la columna para mayor claridad
 df_max_tecnologia.rename(columns={'AREA_COB_MAX': 'AREA_COB_MAX_TECNOLOGIAS'}, inplace=True)
 
 # Crear una columna que identifique la tecnología del máximo
 df_max_tecnologia['TECNOLOGIA_MAX'] = df_max_tecnologia['TECNOLOGIA']
+print(df_max_tecnologia.dtypes)
+
 
 # Calcular el porcentaje de cobertura del operador con mayor área de cobertura en comparación con el área total del CPOB
 df_max_tecnologia['PORCENTAJE_COBERTURA'] = (df_max_tecnologia['AREA_COB_MAX_TECNOLOGIAS'] / df_max_tecnologia['AREA_CPOB']) * 100
@@ -166,14 +168,57 @@ df_filtrado = df[(df['ANNO'] == '2024') & (df['TRIMESTRE'] == '4')]
 top_deptos = df_filtrado['DEPARTAMENTO'].value_counts().head(30).index
 df_top = df_filtrado[df_filtrado['DEPARTAMENTO'].isin(top_deptos)]
 
+# df lugares sin cobertura, para sacar deptos con mayor número de poblados sin cobertura
+df_sin_tecnologia = df[(df['TECNOLOGIA'] == 'Ninguna')]
+
+# Contar cuántos poblados únicos hay sin tecnología (cobertura) en c/departamento
+df_cuenta_sin_tecnologia = (
+    df_sin_tecnologia
+    .groupby(['ANNO', 'DEPARTAMENTO'])['CPOB']
+    .nunique()  # cuenta poblados únicos
+    .reset_index(name='NUM_CPOB_SIN_TEC')
+)
+
+# Orden ascendente
+df_cuenta_sin_tecnologia = df_cuenta_sin_tecnologia.sort_values(['ANNO', 'NUM_CPOB_SIN_TEC'], ascending=[True, False])
 
 
+# Calcular la matriz de correlación entre las áreas de cobertura de los diferentes operadores
+cols_num = [
+    'AREA_CPOB',
+    'AREA_COB_CLARO',
+    'AREA_COB_MOVISTAR',
+    'AREA_COB_TIGO',
+    'AREA_COB_WOM'
+]
 
+# Calcular matriz de correlación
+corr_matrix = df[cols_num].corr()
 
+# Agrupación: año, trimestre y tecnología
+df_temp = (
+    df.groupby(["ANNO","TRIMESTRE","TECNOLOGIA"], as_index=False)
+      .agg({
+          "AREA_COB_CLARO": "sum",
+          "AREA_COB_MOVISTAR": "sum",
+          "AREA_COB_TIGO": "sum",
+          "AREA_COB_WOM": "sum"
+      })
+)
 
+# Crear columna de tiempo ordenable
+df_temp["PERIODO"] = df_temp["ANNO"].astype(str) + "-T" + df_temp["TRIMESTRE"].astype(str)
 
+# Reorganizar a formato largo para que Plotly pueda graficarlo
+df_long = df_temp.melt(
+    id_vars=["PERIODO", "ANNO", "TRIMESTRE", "TECNOLOGIA"],
+    value_vars=["AREA_COB_CLARO", "AREA_COB_MOVISTAR", "AREA_COB_TIGO", "AREA_COB_WOM"],
+    var_name="OPERADOR",
+    value_name="AREA_COBERTURA"
+)
 
-
+# Limpiar nombres de operador para mejor visualización
+df_long["OPERADOR"] = df_long["OPERADOR"].str.replace("AREA_COB_", "", regex=False)
 
 
 

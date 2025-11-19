@@ -1,6 +1,6 @@
 import streamlit as st
-import pandas as pd
 import plotly.graph_objects as go, plotly.express as px
+import pandas as pd
     
 
 ruta = 'https://github.com/juliandariogiraldoocampo/analisis_taltech/raw/refs/heads/main/explorador/Estado_de_la_prestaci%C3%B3n_del_servicio_de_energ%C3%ADa_en_Zonas_No_Interconectadas_20251021.csv'

@@ -5,10 +5,16 @@ import matplotlib.pyplot as plt, \
        matplotlib.patches as mpatches
 import seaborn as sns
 import numpy as np
+import plotly.express as px
+from scipy.cluster.hierarchy import linkage, dendrogram
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots   
+
 from .code import (
     df, df_max_tecnologia, df_comparativo, 
     porcentaje_operador, conteo_operador, cols, 
-    df_top
+    df_top, df_cuenta_sin_tecnologia, corr_matrix,
+    df_long
 )
 
 # Colores por operador (definición centralizada)
@@ -171,20 +177,75 @@ plt.title('Porcentaje de predominancia por operador (CPOB)', fontsize=16, fontwe
 plt.show()
 
 #------- GRAFICO 6 -------#
+plt.figure(figsize=(10,6))
+sns.barplot(
+    data=df_cuenta_sin_tecnologia,
+    x='DEPARTAMENTO',
+    y='NUM_CPOB_SIN_TEC',
+    hue='ANNO',
+    palette='YlOrBr'
+)
+plt.title('Departamentos con más cabeceras municipales sin cobertura móvil')
+plt.xlabel('Departamento')
+plt.ylabel('Número de poblados sin tecnología')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.show()
+
+#------- GRAFICO 7 -------#
+
+# Crear el heatmap
+fig = px.imshow(
+    corr_matrix,
+    text_auto=True,            # muestra los valores dentro del heatmap
+    color_continuous_scale='RdBu_r',  # paleta típica para correlaciones
+    aspect="auto",
+    title="Mapa de Correlación entre Variables de Área de Cobertura"
+)
+fig.show()
+
+#------- GRAFICO 8 -------#
+
+# Gráfico temporal
+fig = px.line(
+    df_long,
+    x="PERIODO",
+    y="AREA_COBERTURA",
+    color="OPERADOR",
+    facet_row="TECNOLOGIA",        # un panel por tecnología (2G, 3G, 4G, 5G)
+    markers=True,
+    title="Evolución Temporal del Área de Cobertura por Operador y Tecnología"
+)
+
+fig.update_layout(height=1200)
+fig.show()
+
+#------- GRAFICO 9 -------#
+
+# Gráfico temporal
+fig = px.line(
+    df_long,
+    x="PERIODO",
+    y="AREA_COBERTURA",
+    color="OPERADOR",
+    facet_row="TECNOLOGIA",        # un panel por tecnología (2G, 3G, 4G, 5G)
+    markers=True,
+    title="Evolución Temporal del Área de Cobertura por Operador y Tecnología"
+)
+
+fig.update_layout(height=1200)
+fig.show()
 
 
+#------- GRAFICO 10 -------#
 
+#------- GRAFICO 11 -------#
 
+#------- GRAFICO 12 -------#
 
+#------- GRAFICO 13 -------#
 
-
-
-
-
-
-
-
-
+#------- GRAFICO 14 -------#
 
 
 

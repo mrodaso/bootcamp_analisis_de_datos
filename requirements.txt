@@ -5,8 +5,9 @@ openpyxl
 streamlit 
 numpy
 plotly
-
-
+scipy
+# geopandas
+xgboost
 
 
 
