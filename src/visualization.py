@@ -14,7 +14,7 @@ from .code import (
     df, df_max_tecnologia, df_comparativo, 
     porcentaje_operador, conteo_operador, cols, 
     df_top, df_cuenta_sin_tecnologia, corr_matrix,
-    df_long
+    df_long, df_cob_max_depto_4g, counties 
 )
 
 # Colores por operador (definición centralizada)
@@ -239,11 +239,99 @@ fig.show()
 
 #------- GRAFICO 10 -------#
 
+# CLARO - Cobertura 4G Máxima Observada - Promedio Departamental
+
+locs = df_cob_max_depto_4g['DEPARTAMENTO']
+
+for loc in counties['features']:
+    loc['id'] = loc['properties']['NOMBRE_DPT']
+
+
+
+fig = go.Figure(go.Choroplethmapbox(
+                    geojson=counties,
+                    locations=locs,
+                    z=df_cob_max_depto_4g['PCT_MAX_PROMEDIO_CLARO'],
+                    colorscale='Viridis',
+                    colorbar_title='Cobertura promedio (%)'))
+fig.update_layout(mapbox_style="carto-positron",
+                        mapbox_zoom=4.2,
+                        width=750,    # Ancho total de la figura en píxeles
+                        height=700,    # Alto total de la figura en píxeles
+                        title={
+                            'text': "Promedio Departamental de Cobertura 4G Máxima Observada<br>de CLARO",
+                            'x': 0.5,  # Centrar el título
+                            'xanchor': 'center',
+                            'yanchor': 'top'
+                        },
+                        mapbox_center = {"lat": 4.570868, "lon": -74.2973328})
+fig.show()
+
 #------- GRAFICO 11 -------#
+# MOVISTAR - Cobertura 4G Máxima Observada - Promedio Departamental
+
+fig = go.Figure(go.Choroplethmapbox(
+                    geojson=counties,
+                    locations=locs,
+                    z=df_cob_max_depto_4g['PCT_MAX_PROMEDIO_MOVISTAR'],
+                    colorscale='Viridis',
+                    colorbar_title='Cobertura promedio (%)'))
+fig.update_layout(mapbox_style="carto-positron",
+                        mapbox_zoom=4.2,
+                        width=750,    # Ancho total de la figura en píxeles
+                        height=700,    # Alto total de la figura en píxeles
+                        title={
+                            'text': "Promedio Departamental de Cobertura 4G Máxima Observada<br>de MOVISTAR",
+                            'x': 0.5,  # Centrar el título
+                            'xanchor': 'center',
+                            'yanchor': 'top'
+                        },
+                        mapbox_center = {"lat": 4.570868, "lon": -74.2973328})
+fig.show()
 
 #------- GRAFICO 12 -------#
 
+# TIGO - Cobertura 4G Máxima Observada - Promedio Departamental
+fig = go.Figure(go.Choroplethmapbox(
+                    geojson=counties,
+                    locations=locs,
+                    z=df_cob_max_depto_4g['PCT_MAX_PROMEDIO_TIGO'],
+                    colorscale='Viridis',
+                    colorbar_title='Cobertura promedio (%)'))
+fig.update_layout(mapbox_style="carto-positron",
+                        mapbox_zoom=4.2,
+                        width=750,    # Ancho total de la figura en píxeles
+                        height=700,    # Alto total de la figura en píxeles
+                        title={
+                            'text': "Promedio Departamental de Cobertura 4G Máxima Observada<br>de TIGO",
+                            'x': 0.5,  # Centrar el título
+                            'xanchor': 'center',
+                            'yanchor': 'top'
+                        },
+                        mapbox_center = {"lat": 4.570868, "lon": -74.2973328})
+fig.show()
+
 #------- GRAFICO 13 -------#
+
+# WOM - Cobertura 4G Máxima Observada - Promedio Departamental
+fig = go.Figure(go.Choroplethmapbox(
+                    geojson=counties,
+                    locations=locs,
+                    z=df_cob_max_depto_4g['PCT_MAX_PROMEDIO_WOM'],
+                    colorscale='Viridis',
+                    colorbar_title='Cobertura promedio (%)'))
+fig.update_layout(mapbox_style="carto-positron",
+                        mapbox_zoom=4.2,
+                        width=750,    # Ancho total de la figura en píxeles
+                        height=700,    # Alto total de la figura en píxeles
+                        title={
+                            'text': "Promedio Departamental de Cobertura 4G Máxima Observada<br>de WOM",
+                            'x': 0.5,  # Centrar el título
+                            'xanchor': 'center',
+                            'yanchor': 'top'
+                        },
+                        mapbox_center = {"lat": 4.570868, "lon": -74.2973328})
+fig.show()
 
 #------- GRAFICO 14 -------#
 
